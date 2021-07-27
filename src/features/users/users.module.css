@@ -1,0 +1,10 @@
+.table_container {
+  position: absolute;
+  left: 50%;
+  width: 300px;
+  padding-top: 20px;
+}
+.table {
+  position: absolute;
+  left: -50%;
+}
