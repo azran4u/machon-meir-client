@@ -28,7 +28,7 @@ export const UsersTable: React.FC = () => {
       )}
 
       <div className={styles.table_container}>
-        {!_.isEmpty(users) && (
+        {!_.isEmpty(users) && _.isArray(users) && (
           <Table className={styles.table} striped bordered hover size="sm">
             <thead>
               <tr>
@@ -39,7 +39,7 @@ export const UsersTable: React.FC = () => {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr>
+                <tr key={user.id}>
                   <td>{user.id}</td>
                   <td>{user.name}</td>
                   <td>{user.age}</td>
