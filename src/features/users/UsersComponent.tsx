@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
 import { Spinner, Table } from "react-bootstrap";
-
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { fetchUsersAsync, selectUsers } from "./usersSlice";
-import * as _ from "lodash";
 
 import styles from "./users.module.css";
 
-export const UsersTable: React.FC = () => {
+export const UsersComponent: React.FC = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -26,29 +24,26 @@ export const UsersTable: React.FC = () => {
           </Spinner>
         </div>
       )}
-
-      <div className={styles.table_container}>
-        {!_.isEmpty(users) && _.isArray(users) && (
-          <Table className={styles.table} striped bordered hover size="sm">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Age</th>
+      {users && (
+        <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Age</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.name}</td>
+                <td>{user.age}</td>
               </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.name}</td>
-                  <td>{user.age}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
-      </div>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </div>
   );
 };
