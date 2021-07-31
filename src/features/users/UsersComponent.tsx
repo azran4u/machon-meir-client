@@ -18,31 +18,38 @@ export const UsersComponent: React.FC = () => {
     <div>
       {error && <div>{error}</div>}
       {loading && (
-        <div className={styles.table_container}>
-          <Spinner animation="border" role="status" className={styles.table}>
+        <div className={styles.center}>
+          <div className="flex-item-left"></div>
+          <Spinner animation="border" role="status" className={styles.spinner}>
             <span className="visually-hidden">Loading...</span>
           </Spinner>
+          <div className="flex-item-right"></div>
         </div>
       )}
       {users && (
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Age</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.name}</td>
-                <td>{user.age}</td>
+        <div className={styles.center}>
+          <div className="flex-item-left"></div>
+
+          <Table striped bordered hover responsive className={styles.table}>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Age</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.name}</td>
+                  <td>{user.age}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          <div className="flex-item-right"></div>
+        </div>
       )}
     </div>
   );

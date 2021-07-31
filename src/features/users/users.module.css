@@ -1,10 +1,14 @@
-.table_container {
-  position: absolute;
-  left: 50%;
-  width: 300px;
-  padding-top: 20px;
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.spinner {
+  width: 100px;
+  height: 100px;
+  margin-top: 20px;
+}
+
 .table {
-  position: absolute;
-  left: -50%;
+  margin-top: 20px;
 }

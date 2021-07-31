@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { UsersComponent } from "./features/users/UsersComponent";
+import { Counter } from "./features/counter/Counter";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Switch>
             <Route path="/" component={UsersComponent} exact />
             <Route path="/users" component={UsersComponent} />
+            <Route path="/counter" component={Counter} />
             {/* <Route component={Error} /> */}
           </Switch>
         </div>
