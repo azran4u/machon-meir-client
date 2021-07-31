@@ -1,0 +1,49 @@
+.table_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.buttons_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.button {
+  width: 150px;
+  height: 40px;
+  margin: 10px;
+}
+
+.spinner {
+  width: 100px;
+  height: 100px;
+}
+
+.item {
+  align-self: center;
+}
+
+.item-left {
+  align-self: flex-start;
+}
+.table {
+  width: 500px;
+}
+.buttons_container_horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.buttons_container_vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.red {
+  background-color: red;
+}
