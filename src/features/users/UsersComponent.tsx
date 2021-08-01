@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Spinner, Table } from "react-bootstrap";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { fetchUsersAsync, selectUsers } from "./usersSlice";
@@ -14,9 +14,37 @@ export const UsersComponent: React.FC = () => {
 
   const { users, loading, error } = useAppSelector(selectUsers);
 
-  const refreshData = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    console.log(`Refresh Data clicked`);
+  const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(false);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | undefined>(
+    undefined
+  );
+
+  const refreshData = () => {
     dispatch(fetchUsersAsync());
+  };
+
+  const onClickRefreshData = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    refreshData();
+  };
+
+  useEffect(() => {
+    if (autoRefreshEnabled) {
+      setIntervalId(
+        setInterval(() => {
+          refreshData();
+        }, 1000)
+      );
+    } else {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    }
+  }, [autoRefreshEnabled]);
+
+  const onClickAutoRefreshData = (
+    e: React.MouseEvent<HTMLElement, MouseEvent>
+  ) => {
+    setAutoRefreshEnabled(!autoRefreshEnabled);
   };
 
   return (
@@ -39,11 +67,15 @@ export const UsersComponent: React.FC = () => {
             <Button
               variant="outline-primary"
               className="button"
-              onClick={refreshData}
+              onClick={onClickRefreshData}
             >
               Refresh Data
             </Button>
-            <Button variant="outline-primary" className="button">
+            <Button
+              variant="outline-primary"
+              className="button"
+              onClick={onClickAutoRefreshData}
+            >
               Auto Refresh
             </Button>
           </div>
