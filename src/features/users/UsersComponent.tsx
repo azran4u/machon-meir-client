@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Spinner, Table } from "react-bootstrap";
+import { Button, Spinner, Table, ToggleButton } from "react-bootstrap";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { fetchUsersAsync, selectUsers } from "./usersSlice";
 
@@ -71,13 +71,17 @@ export const UsersComponent: React.FC = () => {
             >
               Refresh Data
             </Button>
-            <Button
+            <ToggleButton
+              className="mb-2 button"
+              id="toggle-check"
+              type="checkbox"
               variant="outline-primary"
-              className="button"
-              onClick={onClickAutoRefreshData}
+              checked={autoRefreshEnabled}
+              value="1"
+              onChange={(e) => setAutoRefreshEnabled(e.currentTarget.checked)}
             >
               Auto Refresh
-            </Button>
+            </ToggleButton>
           </div>
           <div className="table_container">
             <Table striped bordered hover responsive className="table">
