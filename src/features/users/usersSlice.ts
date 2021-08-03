@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import _ from "lodash";
 import { RootState } from "../../app/store";
 import { fetchUsers } from "./usersAPI";
 
@@ -49,6 +50,13 @@ export const usersSlice = createSlice({
         };
       })
       .addCase(fetchUsersAsync.fulfilled, (state, action) => {
+        if (_.isEqual(state.users, action.payload)) {
+          return {
+            ...state,
+            error: undefined,
+            loading: false,
+          };
+        }
         return {
           ...state,
           users: action.payload,
