@@ -2,9 +2,9 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { TopNavBar } from "./components/navbar";
 import { Provider } from "react-redux";
-import { store } from "./app/store";
+import { store } from "./store/store";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { LessonViewerComponentV2 } from "./features/rabbifireman/lessonsViewerV2";
+import { LessonComponent } from "./components/lessonsComponent";
 
 function App() {
   return (
@@ -13,11 +13,7 @@ function App() {
         <div className="App">
           <TopNavBar />
           <Switch>
-            <Route
-              path="/rabbifireman"
-              component={LessonViewerComponentV2}
-              exact
-            />
+            <Route path="/rabbifireman" component={LessonComponent} exact />
             <Route
               exact
               path="/"

@@ -1,5 +1,5 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import rabbifiremanReducer from "../features/rabbifireman/rabbifiremanSlice";
+import rabbifiremanReducer from "../lessons/lessonsSlice";
 
 export const store = configureStore({
   reducer: {

@@ -16,7 +16,6 @@ const ButtonStyle = styled.button`
   }
 `;
 
-// eslint-disable-next-line react/prop-types
-export default ({ children, ...rest }: any) => (
-  <ButtonStyle {...rest}>{children}</ButtonStyle>
-);
+export const ButtonComponent: React.FC<any> = ({ children, ...rest }: any) => {
+  return <ButtonStyle {...rest}>{children}</ButtonStyle>;
+};

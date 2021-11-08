@@ -3,11 +3,11 @@ import DataTable, {
   TableColumn,
 } from "react-data-table-component";
 import React, { useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { fetchLessonsAsync, Lesson, selectLessons } from "./rabbifiremanSlice";
-import { dateFormat } from "./dateFormat";
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { fetchLessonsAsync, Lesson, selectLessons } from "../lessons/lessonsSlice";
+import { dateFormat } from "../utils/dateFormat";
 import { Spinner } from "react-bootstrap";
-import Button from "./button";
+import { ButtonComponent } from "./buttonComponent";
 import styled from "styled-components";
 
 const TextField = styled.input`
@@ -27,7 +27,7 @@ const TextField = styled.input`
   justify-content: center;
 `;
 
-const ClearButton = styled(Button)`
+const ClearButton = styled(ButtonComponent)`
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-top-right-radius: 5px;
@@ -77,7 +77,7 @@ const paginationComponentOptions: PaginationOptions = {
   selectAllRowsItem: true,
 };
 
-export const LessonViewerComponentV2: React.FC = () => {
+export const LessonComponent: React.FC = () => {
   const columns: TableColumn<Lesson>[] = [
     {
       name: "תגיות",

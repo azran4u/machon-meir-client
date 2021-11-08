@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import _ from "lodash";
-import { RootState } from "../../app/store";
-import { fetchLessons } from "./rabbifiremanService";
+import { RootState } from "../store/store";
+import { fetchLessons } from "./lessonsService";
 
 export interface Lesson {
   id: string;
