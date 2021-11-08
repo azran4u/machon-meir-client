@@ -3,9 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { TopNavBar } from "./components/navbar";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { UsersComponent } from "./features/users/UsersComponent";
-import { Counter } from "./features/counter/Counter";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { LessonViewerComponentV2 } from "./features/rabbifireman/lessonsViewerV2";
 
 function App() {
   return (
@@ -14,9 +13,16 @@ function App() {
         <div className="App">
           <TopNavBar />
           <Switch>
-            <Route path="/" component={UsersComponent} exact />
-            <Route path="/users" component={UsersComponent} />
-            <Route path="/counter" component={Counter} />
+            <Route
+              path="/rabbifireman"
+              component={LessonViewerComponentV2}
+              exact
+            />
+            <Route
+              exact
+              path="/"
+              render={() => <Redirect to="/rabbifireman" />}
+            />
             {/* <Route component={Error} /> */}
           </Switch>
         </div>

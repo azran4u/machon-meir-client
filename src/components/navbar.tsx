@@ -5,10 +5,9 @@ export const TopNavBar: React.FC = () => {
     <div>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="#home">My App</Navbar.Brand>
+          <Navbar.Brand href="/">שיעורי מכון מאיר</Navbar.Brand>
           <Nav className="ml-auto">
-            <Nav.Link href="/users">Users</Nav.Link>
-            <Nav.Link href="/counter">Counter</Nav.Link>
+            <Nav.Link href="/rabbifireman">הרב ראובן פיירמן</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
