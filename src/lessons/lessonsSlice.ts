@@ -1,18 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import _ from "lodash";
 import { RootState } from "../store/store";
+import { Lesson } from "./lessonModel";
 import { fetchLessons } from "./lessonsService";
 
-export interface Lesson {
-  id: string;
-  url: string;
-  title: string;
-  date: string;
-  tags: string[];
-  mediaUrl: string;
-  updatedAt: string;
-  valid: boolean;
-}
+
 export interface RabbiFiremanState {
   lessons: Lesson[];
   loading: boolean;
