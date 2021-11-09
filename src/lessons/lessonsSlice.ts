@@ -4,14 +4,13 @@ import { RootState } from "../store/store";
 import { Lesson } from "./lessonModel";
 import { fetchLessons } from "./lessonsService";
 
-
-export interface RabbiFiremanState {
+export interface LessonsState {
   lessons: Lesson[];
   loading: boolean;
   error: string | undefined;
 }
 
-const initialState: RabbiFiremanState = {
+const initialState: LessonsState = {
   lessons: [],
   loading: false,
   error: undefined,
@@ -23,15 +22,15 @@ const initialState: RabbiFiremanState = {
 // code can then be executed and other actions can be dispatched. Thunks are
 // typically used to make async requests.
 export const fetchLessonsAsync = createAsyncThunk<Lesson[]>(
-  "rabbifireman/fetchLessons",
+  "lessons/fetchLessons",
   async () => {
     const lessons = await fetchLessons();
     return lessons;
   }
 );
 
-export const rabbifiremanSlice = createSlice({
-  name: "rabbifireman",
+export const lessonsSlice = createSlice({
+  name: "lessons",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {},
@@ -73,6 +72,6 @@ export const rabbifiremanSlice = createSlice({
 
 // export const {} = usersSlice.actions;
 
-export const selectLessons = (state: RootState) => state.rabbifireman;
+export const selectLessons = (state: RootState) => state.lessons;
 
-export default rabbifiremanSlice.reducer;
+export default lessonsSlice.reducer;
