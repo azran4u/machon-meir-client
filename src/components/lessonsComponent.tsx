@@ -9,6 +9,8 @@ import { dateFormat } from "../utils/dateFormat";
 import { FilterComponent } from "./filterComponent";
 import { dateSorter } from "../utils/dateSorter";
 import { Lesson } from "../model/lesson";
+import { MediaPlayerComponent } from "./mediaPlayer";
+import { Link, Redirect } from "react-router-dom";
 
 export const LessonComponent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -73,9 +75,16 @@ export const LessonComponent: React.FC = () => {
       wrap: true,
       right: true,
       cell: (row) => (
-        <a href={row.mediaUrl} target="_blank" rel="noopener noreferrer">
+        <Link<{ url: string }>
+          to={{
+            pathname: "media",
+            state: {
+              url: row.mediaUrl,
+            },
+          }}
+        >
           {row.title}
-        </a>
+        </Link>
       ),
     },
     {

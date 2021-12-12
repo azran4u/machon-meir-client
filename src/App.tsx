@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { LessonComponent } from "./components/lessonsComponent";
+import { MediaPlayerComponent } from "./components/mediaPlayer";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <div className="App">
           <TopNavBar />
           <Switch>
+            <Route path="/media" component={MediaPlayerComponent} exact />
             <Route path="/rabbifireman" component={LessonComponent} exact />
             <Route
               exact
