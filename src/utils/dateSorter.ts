@@ -1,9 +1,8 @@
-import { Lesson } from "../lessons/lessonModel";
-
+import { Lesson } from "../model/lesson";
 
 export const dateSorter = (rowA: Lesson, rowB: Lesson) => {
-  const a = new Date(rowA.date).getTime();
-  const b = new Date(rowB.date).getTime();
+  const a = rowA.date.getTime();
+  const b = rowB.date.getTime();
 
   if (a > b) {
     return 1;

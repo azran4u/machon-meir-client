@@ -8,7 +8,7 @@ import { fetchLessonsAsync, selectLessons } from "../lessons/lessonsSlice";
 import { dateFormat } from "../utils/dateFormat";
 import { FilterComponent } from "./filterComponent";
 import { dateSorter } from "../utils/dateSorter";
-import { Lesson } from "../lessons/lessonModel";
+import { Lesson } from "../model/lesson";
 
 export const LessonComponent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -16,17 +16,18 @@ export const LessonComponent: React.FC = () => {
   useEffect(() => {
     dispatch(fetchLessonsAsync());
   }, [dispatch]);
-
-  const { lessons, loading, error } = useAppSelector(selectLessons);
+  const { snapshot, loading, error } = useAppSelector(selectLessons);
 
   useEffect(() => {
-    console.log(error);
+    if (error) {
+      console.log(error);
+    }
   }, [error]);
 
   const [filterText, setFilterText] = React.useState("");
   const [resetPaginationToggle, setResetPaginationToggle] =
     React.useState(false);
-  const filteredItems = lessons.filter(
+  const filteredItems = snapshot.lessons.filter(
     (item) =>
       (item.title &&
         item.title.toLowerCase().includes(filterText.toLowerCase())) ||
@@ -79,7 +80,7 @@ export const LessonComponent: React.FC = () => {
     },
     {
       name: "תאריך",
-      selector: (row) => dateFormat(row.date),
+      selector: (row) => dateFormat(row.date.toUTCString()),
       sortable: true,
       sortFunction: dateSorter,
       right: true,
@@ -91,27 +92,36 @@ export const LessonComponent: React.FC = () => {
     selectAllRowsItem: true,
   };
 
+  function datePipe(date: Date): string {
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  }
   if (error) {
     return <div>{error}</div>;
   } else {
     return (
       <div>
-        {lessons && (
-          <DataTable
-            columns={columns}
-            data={filteredItems}
-            pagination
-            paginationResetDefaultPage={resetPaginationToggle}
-            subHeader
-            subHeaderComponent={subHeaderComponentMemo}
-            paginationComponentOptions={paginationComponentOptions}
-            progressPending={loading}
-            highlightOnHover
-            pointerOnHover
-            persistTableHead
-            fixedHeader
-          />
-        )}
+        <h5>
+          השיעורים עודכנו לאחרונה בתאריך {datePipe(new Date(snapshot.date))}
+        </h5>
+        <div>
+          {snapshot.lessons && (
+            <DataTable
+              columns={columns}
+              data={filteredItems}
+              pagination
+              paginationResetDefaultPage={resetPaginationToggle}
+              subHeader
+              subHeaderComponent={subHeaderComponentMemo}
+              paginationComponentOptions={paginationComponentOptions}
+              progressPending={loading}
+              highlightOnHover
+              pointerOnHover
+              persistTableHead
+              fixedHeader
+              keyField="כותרת"
+            />
+          )}
+        </div>
       </div>
     );
   }
