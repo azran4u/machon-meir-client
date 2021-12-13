@@ -89,11 +89,11 @@ export const LessonComponent: React.FC = () => {
       right: true,
       cell: (row) => (
         <div style={{ textAlign: "right", direction: "rtl" }}>
-          <Link<{ url: string }>
+          <Link<{ lesson: Lesson }>
             to={{
               pathname: "media",
               state: {
-                url: row.mediaUrl,
+                lesson: row,
               },
             }}
           >
@@ -125,7 +125,7 @@ export const LessonComponent: React.FC = () => {
     return (
       <div>
         <h5 key="header">
-          השיעורים עודכנו לאחרונה בתאריך {datePipe(new Date(snapshot.date))}
+          השיעורים עודכנו לאחרונה בתאריך {datePipe(snapshot.date)}
         </h5>
         <div key="table">
           {snapshot.lessons && (
