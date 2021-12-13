@@ -1,6 +1,5 @@
-import { data } from "../data/lessons";
 import { RabbiEnum } from "../model/rabi.enum";
-import { Snapshot } from "../model/snapshot";
+import { Snapshot, SnapshotSerializable } from "../model/snapshot";
 import {
   AnonymousCredential,
   BlobDownloadResponseParsed,
@@ -8,17 +7,10 @@ import {
   ContainerClient,
 } from "@azure/storage-blob";
 import { config } from "../config/config";
-import { Lesson } from "../model/lesson";
 
-export async function fetchLessons(): Promise<Lesson[]> {
-  try {
-    return data.lessons as any as Lesson[];
-  } catch (error) {
-    throw new Error(`could not read data ${error}`);
-  }
-}
-
-export async function fetchLessonsByRabbi(rabbi: RabbiEnum): Promise<Snapshot> {
+export async function fetchLessonsByRabbi(
+  rabbi: RabbiEnum
+): Promise<SnapshotSerializable> {
   let blobServiceClient: BlobServiceClient;
   let containerClient: ContainerClient;
   try {
@@ -60,34 +52,19 @@ export async function fetchLessonsByRabbi(rabbi: RabbiEnum): Promise<Snapshot> {
   const blobName = snapshotToBlobName(lastSnapshot);
   const blocbClient = containerClient.getBlobClient(blobName);
   let downloadBlockBlobResponse: BlobDownloadResponseParsed;
-  let downloaded: string | ArrayBuffer;
+  let content: string;
   try {
     downloadBlockBlobResponse = await blocbClient.download();
-    downloaded = await blobToString(await downloadBlockBlobResponse.blobBody);
+    const blob = await downloadBlockBlobResponse.blobBody;
+    content = await blob.text();
   } catch (error) {
     throw new Error(`downloading blob ${blobName} failed ${error}`);
   }
-  let lessons: Lesson[];
-  try {
-    lessons = JSON.parse(downloaded as string);
-    lessons = lessons.map((lesson) => {
-      return { ...lesson, date: new Date(lesson.date) };
-    });
-  } catch (error) {
-    throw new Error(`parsing blob content has failed ${error}`);
-  }
-  return { ...lastSnapshot, lessons };
-}
-
-async function blobToString(blob): Promise<string | ArrayBuffer> {
-  const fileReader = new FileReader();
-  return new Promise((resolve, reject) => {
-    fileReader.onloadend = (ev) => {
-      resolve(ev.target.result);
-    };
-    fileReader.onerror = reject;
-    fileReader.readAsText(blob);
-  });
+  return {
+    lessons: content,
+    rabbi: lastSnapshot.rabbi,
+    date: lastSnapshot.date.getTime(),
+  };
 }
 
 function blobNameToSnapshot(blobName: string): Snapshot {

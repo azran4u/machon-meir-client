@@ -4,6 +4,8 @@ import { RabbiEnum } from "../model/rabi.enum";
 import { Snapshot, SnapshotSerializable } from "../model/snapshot";
 import { RootState } from "../store/store";
 import { fetchLessonsByRabbi } from "./lessonsService";
+import serialize from "serialize-javascript";
+import { deserialize } from "../utils/deserialize";
 
 export interface LessonsState<T> {
   snapshot: T;
@@ -12,7 +14,11 @@ export interface LessonsState<T> {
 }
 
 const initialState: LessonsState<SnapshotSerializable> = {
-  snapshot: { date: undefined, rabbi: RabbiEnum.RABBI_FIREMAN, lessons: [] },
+  snapshot: {
+    date: undefined,
+    rabbi: RabbiEnum.RABBI_FIREMAN,
+    lessons: serialize([]),
+  },
   loading: false,
   error: undefined,
 };
@@ -25,14 +31,7 @@ const initialState: LessonsState<SnapshotSerializable> = {
 export const fetchLessonsAsync = createAsyncThunk<SnapshotSerializable>(
   "lessons/fetchLessons",
   async () => {
-    const snapshot = await fetchLessonsByRabbi(RabbiEnum.RABBI_FIREMAN);
-    return {
-      ...snapshot,
-      date: snapshot.date.getTime(),
-      lessons: snapshot.lessons.map((lesson) => {
-        return { ...lesson, date: lesson.date.getTime() };
-      }),
-    };
+    return fetchLessonsByRabbi(RabbiEnum.RABBI_FIREMAN);
   }
 );
 
@@ -81,13 +80,12 @@ export const lessonsSlice = createSlice({
 
 export const selectLessons = (state: RootState): LessonsState<Snapshot> => {
   return {
-    ...state.lessons,
+    error: state.lessons.error,
+    loading: state.lessons.loading,
     snapshot: {
-      ...state.lessons.snapshot,
+      rabbi: RabbiEnum[state.lessons.snapshot.rabbi],
       date: new Date(+state.lessons.snapshot.date),
-      lessons: state.lessons.snapshot.lessons.map((lesson) => {
-        return { ...lesson, date: new Date(lesson.date) };
-      }),
+      lessons: deserialize(state.lessons.snapshot.lessons),
     },
   };
 };

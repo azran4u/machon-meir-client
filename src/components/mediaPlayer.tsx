@@ -24,7 +24,7 @@ export const MediaPlayerComponent = () => {
           ? currentTimeInLocalStorage - PLAYBACK
           : 0;
     }
-  }, []);
+  }, [url]);
 
   const onPause = () => {
     localStorage.setItem(url, audio.current.currentTime.toString());

@@ -9,8 +9,7 @@ import { dateFormat } from "../utils/dateFormat";
 import { FilterComponent } from "./filterComponent";
 import { dateSorter } from "../utils/dateSorter";
 import { Lesson } from "../model/lesson";
-import { MediaPlayerComponent } from "./mediaPlayer";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const LessonComponent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -27,15 +26,29 @@ export const LessonComponent: React.FC = () => {
   }, [error]);
 
   const [filterText, setFilterText] = React.useState("");
+  const [filteredItems, setFilteredItems] = React.useState(snapshot.lessons);
+  const [data, setData] = React.useState(filteredItems);
   const [resetPaginationToggle, setResetPaginationToggle] =
     React.useState(false);
-  const filteredItems = snapshot.lessons.filter(
-    (item) =>
-      (item.title &&
-        item.title.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.tags &&
-        item.tags.join(" ").toLowerCase().includes(filterText.toLowerCase()))
-  );
+
+  useEffect(() => {
+    setData(filteredItems);
+  }, [filteredItems]);
+
+  useEffect(() => {
+    setFilteredItems(
+      snapshot.lessons.filter(
+        (item) =>
+          (item.title &&
+            item.title.toLowerCase().includes(filterText.toLowerCase())) ||
+          (item.tags &&
+            item.tags
+              .join(" ")
+              .toLowerCase()
+              .includes(filterText.toLowerCase()))
+      )
+    );
+  }, [snapshot, filterText]);
 
   const subHeaderComponentMemo = React.useMemo(() => {
     const handleClear = () => {
@@ -60,7 +73,7 @@ export const LessonComponent: React.FC = () => {
       wrap: true,
       right: true,
       cell: (row) => (
-        <div>
+        <div style={{ textAlign: "right", direction: "rtl" }}>
           {row.tags.map((tag) => {
             return <div onClick={() => setFilterText(tag)}>{tag}</div>;
           })}
@@ -75,21 +88,23 @@ export const LessonComponent: React.FC = () => {
       wrap: true,
       right: true,
       cell: (row) => (
-        <Link<{ url: string }>
-          to={{
-            pathname: "media",
-            state: {
-              url: row.mediaUrl,
-            },
-          }}
-        >
-          {row.title}
-        </Link>
+        <div style={{ textAlign: "right", direction: "rtl" }}>
+          <Link<{ url: string }>
+            to={{
+              pathname: "media",
+              state: {
+                url: row.mediaUrl,
+              },
+            }}
+          >
+            {row.title}
+          </Link>
+        </div>
       ),
     },
     {
       name: "תאריך",
-      selector: (row) => dateFormat(row.date.toUTCString()),
+      selector: (row) => dateFormat(row.date),
       sortable: true,
       sortFunction: dateSorter,
       right: true,
@@ -109,14 +124,14 @@ export const LessonComponent: React.FC = () => {
   } else {
     return (
       <div>
-        <h5>
+        <h5 key="header">
           השיעורים עודכנו לאחרונה בתאריך {datePipe(new Date(snapshot.date))}
         </h5>
-        <div>
+        <div key="table">
           {snapshot.lessons && (
             <DataTable
               columns={columns}
-              data={filteredItems}
+              data={data}
               pagination
               paginationResetDefaultPage={resetPaginationToggle}
               subHeader
@@ -127,7 +142,7 @@ export const LessonComponent: React.FC = () => {
               pointerOnHover
               persistTableHead
               fixedHeader
-              keyField="כותרת"
+              keyField="id"
             />
           )}
         </div>

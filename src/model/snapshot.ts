@@ -10,5 +10,5 @@ export interface Snapshot {
 export interface SnapshotSerializable
   extends Omit<Snapshot, "date" | "lessons"> {
   date: number;
-  lessons: LessonSerializable[];
+  lessons: string;
 }
