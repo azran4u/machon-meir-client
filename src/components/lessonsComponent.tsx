@@ -12,11 +12,6 @@ import { Lesson } from "../model/lesson";
 import { Link } from "react-router-dom";
 
 export const LessonComponent: React.FC = () => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(fetchLessonsAsync());
-  }, [dispatch]);
   const { snapshot, loading, error } = useAppSelector(selectLessons);
 
   useEffect(() => {

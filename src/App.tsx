@@ -6,8 +6,17 @@ import { store } from "./store/store";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { LessonComponent } from "./components/lessonsComponent";
 import { MediaPlayerComponent } from "./components/mediaPlayer";
+import { useAppDispatch } from "./store/hooks";
+import { fetchLessonsAsync } from "./lessons/lessonsSlice";
+import { useEffect } from "react";
 
 function App() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchLessonsAsync());
+  }, [dispatch]);
+
   return (
     <Provider store={store}>
       <BrowserRouter>
