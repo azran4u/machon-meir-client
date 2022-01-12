@@ -3,13 +3,14 @@ import DataTable, {
   TableColumn,
 } from "react-data-table-component";
 import React, { useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../store/hooks";
-import { fetchLessonsAsync, selectLessons } from "../lessons/lessonsSlice";
+import { useAppSelector } from "../store/hooks";
+import { selectLessons } from "../lessons/lessonsSlice";
 import { dateFormat } from "../utils/dateFormat";
 import { FilterComponent } from "./filterComponent";
 import { dateSorter } from "../utils/dateSorter";
 import { Lesson } from "../model/lesson";
 import { Link } from "react-router-dom";
+import { PlaySeriesButton } from "./playSeriesButtonStyle";
 
 export const LessonComponent: React.FC = () => {
   const { snapshot, loading, error } = useAppSelector(selectLessons);
@@ -54,11 +55,16 @@ export const LessonComponent: React.FC = () => {
     };
 
     return (
-      <FilterComponent
-        onFilter={(e: any) => setFilterText(e.target.value)}
-        onClear={handleClear}
-        filterText={filterText}
-      />
+      <div>
+        <FilterComponent
+          onFilter={(e: any) => setFilterText(e.target.value)}
+          onClear={handleClear}
+          filterText={filterText}
+        />
+        <PlaySeriesButton type="button" onClick={console.log("play series")}>
+          נגן סדרה
+        </PlaySeriesButton>
+      </div>
     );
   }, [filterText, resetPaginationToggle]);
 
@@ -129,8 +135,9 @@ export const LessonComponent: React.FC = () => {
               data={data}
               pagination
               paginationResetDefaultPage={resetPaginationToggle}
+              actions={subHeaderComponentMemo}
               subHeader
-              subHeaderComponent={subHeaderComponentMemo}
+              // subHeaderComponent={subHeaderComponentMemo}
               paginationComponentOptions={paginationComponentOptions}
               progressPending={loading}
               highlightOnHover

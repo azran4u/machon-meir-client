@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import { selectCurrentLesson } from "../lessons/currentPlayingSlice";
 import { Lesson } from "../model/lesson";
+import { useAppSelector } from "../store/hooks";
 import { dateFormat } from "../utils/dateFormat";
 
 const containerStyle: React.CSSProperties = {
@@ -22,8 +24,7 @@ const childStyle: React.CSSProperties = {
 
 // eslint-disable-next-line react/prop-types
 export const MediaPlayerComponent = () => {
-  const location = useLocation<{ lesson: Lesson }>();
-  const { lesson } = location.state;
+  const lesson = useAppSelector(selectCurrentLesson);
   const audio = useRef<HTMLAudioElement>(null);
   const PLAYBACK = 30;
   useEffect(() => {

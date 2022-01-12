@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  SliceCaseReducers,
+} from "@reduxjs/toolkit";
 import _ from "lodash";
 import { RabbiEnum } from "../model/rabi.enum";
 import { Snapshot, SnapshotSerializable } from "../model/snapshot";
@@ -13,7 +17,7 @@ export interface LessonsState<T> {
   error: string | undefined;
 }
 
-const initialState: LessonsState<SnapshotSerializable> = {
+const lessonsInitialState: LessonsState<SnapshotSerializable> = {
   snapshot: {
     date: undefined,
     rabbi: RabbiEnum.RABBI_FIREMAN,
@@ -35,9 +39,12 @@ export const fetchLessonsAsync = createAsyncThunk<SnapshotSerializable>(
   }
 );
 
-export const lessonsSlice = createSlice({
+export const lessonsSlice = createSlice<
+  LessonsState<SnapshotSerializable>,
+  SliceCaseReducers<LessonsState<SnapshotSerializable>>
+>({
   name: "lessons",
-  initialState,
+  initialState: lessonsInitialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {},
   // The `extraReducers` field lets the slice handle actions defined elsewhere,

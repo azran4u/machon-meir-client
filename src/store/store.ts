@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import lessonsReducer from "../lessons/lessonsSlice";
+import currentPlayingReducer from "../lessons/currentPlayingSlice";
 
 export const store = configureStore({
   reducer: {
     lessons: lessonsReducer,
+    currentPlaying: currentPlayingReducer,
   },
 });
 

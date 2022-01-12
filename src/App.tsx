@@ -9,6 +9,7 @@ import { MediaPlayerComponent } from "./components/mediaPlayer";
 import { useAppDispatch } from "./store/hooks";
 import { fetchLessonsAsync } from "./lessons/lessonsSlice";
 import { useEffect } from "react";
+import { LessonComponentWraper } from "./components/lessonsComponentWraper";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -24,7 +25,11 @@ function App() {
           <TopNavBar />
           <Switch>
             <Route path="/media" component={MediaPlayerComponent} exact />
-            <Route path="/rabbifireman" component={LessonComponent} exact />
+            <Route
+              path="/rabbifireman"
+              component={LessonComponentWraper}
+              exact
+            />
             <Route
               exact
               path="/"
