@@ -1,6 +1,9 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { selectCurrentLesson } from "../lessons/currentPlayingSlice";
+import {
+  selectCurrentLesson,
+  selectCurrentSeries,
+} from "../lessons/currentPlayingSlice";
 import { Lesson } from "../model/lesson";
 import { useAppSelector } from "../store/hooks";
 import { dateFormat } from "../utils/dateFormat";
@@ -43,21 +46,25 @@ export const MediaPlayerComponent = () => {
 
   return (
     <div style={containerStyle}>
-      <audio
-        style={childStyle}
-        ref={audio}
-        src={lesson.mediaUrl}
-        controls
-        autoPlay
-        onPause={onPause}
-      ></audio>
-      <h5 style={{ ...childStyle, ...hebrewStyle }}>{lesson.title}</h5>
-      <h5 style={{ ...childStyle, ...hebrewStyle }}>
-        תגיות: {lesson.tags.join(" , ")}
-      </h5>
-      <h5 style={{ ...childStyle, ...hebrewStyle }}>
-        {dateFormat(lesson.date)}
-      </h5>
+      {lesson && (
+        <div>
+          <audio
+            style={childStyle}
+            ref={audio}
+            src={lesson.mediaUrl}
+            controls
+            autoPlay
+            onPause={onPause}
+          ></audio>
+          <h5 style={{ ...childStyle, ...hebrewStyle }}>{lesson.title}</h5>
+          <h5 style={{ ...childStyle, ...hebrewStyle }}>
+            תגיות: {lesson.tags.join(" , ")}
+          </h5>
+          <h5 style={{ ...childStyle, ...hebrewStyle }}>
+            {dateFormat(lesson.date)}
+          </h5>
+        </div>
+      )}
     </div>
   );
 };

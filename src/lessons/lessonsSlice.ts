@@ -10,6 +10,7 @@ import { RootState } from "../store/store";
 import { fetchLessonsByRabbi } from "./lessonsService";
 import serialize from "serialize-javascript";
 import { deserialize } from "../utils/deserialize";
+import { Lesson } from "../model/lesson";
 
 export interface LessonsState<T> {
   snapshot: T;
@@ -92,7 +93,14 @@ export const selectLessons = (state: RootState): LessonsState<Snapshot> => {
     snapshot: {
       rabbi: RabbiEnum[state.lessons.snapshot.rabbi],
       date: new Date(+state.lessons.snapshot.date),
-      lessons: deserialize(state.lessons.snapshot.lessons),
+      lessons: deserialize<Lesson[]>(state.lessons.snapshot.lessons).map(
+        (lesson) => {
+          if (!lesson.date) {
+            lesson.date = new Date();
+          }
+          return lesson;
+        }
+      ),
     },
   };
 };

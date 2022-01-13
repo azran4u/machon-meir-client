@@ -1,12 +1,21 @@
 import React, { useEffect } from "react";
-import { useAppSelector } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { selectLessons } from "../lessons/lessonsSlice";
 import { LastScrapComponent } from "./lastScrapComponent";
 import { SearchComponent } from "./searchComponent";
 import { LessonsTableComponent } from "./lessonsTableComponent";
+import {
+  setCurrentLesson,
+  setCurrentSeries,
+  setCurrentSeriesLesson,
+} from "../lessons/currentPlayingSlice";
+import serialize from "serialize-javascript";
+import { useHistory } from "react-router-dom";
 
 export const LessonComponentWraper: React.FC = () => {
   const { snapshot, loading, error } = useAppSelector(selectLessons);
+  const dispatch = useAppDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     if (error) {
@@ -16,13 +25,8 @@ export const LessonComponentWraper: React.FC = () => {
 
   const [filterText, setFilterText] = React.useState("");
   const [filteredItems, setFilteredItems] = React.useState(snapshot.lessons);
-  const [data, setData] = React.useState(filteredItems);
   const [resetPaginationToggle, setResetPaginationToggle] =
     React.useState(false);
-
-  useEffect(() => {
-    setData(filteredItems);
-  }, [filteredItems]);
 
   useEffect(() => {
     setFilteredItems(
@@ -39,10 +43,26 @@ export const LessonComponentWraper: React.FC = () => {
     );
   }, [snapshot, filterText]);
 
-  const handleClear = () => {
+  const clearSearch = () => {
     if (filterText) {
       setResetPaginationToggle(!resetPaginationToggle);
       setFilterText("");
+    }
+  };
+
+  const playSeries = () => {
+    if (filterText) {
+      const currentSeriesLesson = filteredItems.reduce((acc, current) => {
+        if (!acc) return current;
+        if (!current.date) return acc;
+        if (current.date < acc.date) return current;
+      }, undefined);
+      dispatch(setCurrentSeriesLesson(serialize(currentSeriesLesson)));
+      dispatch(setCurrentSeries(filterText));
+      dispatch(setCurrentLesson(serialize(currentSeriesLesson)));
+      history.push("/media");
+      console.log(filterText);
+      console.log(JSON.stringify(currentSeriesLesson));
     }
   };
 
@@ -54,12 +74,12 @@ export const LessonComponentWraper: React.FC = () => {
         <LastScrapComponent date={snapshot.date} />
         <SearchComponent
           onFilter={(e: any) => setFilterText(e.target.value)}
-          onClear={handleClear}
+          onClear={clearSearch}
           filterText={filterText}
-          onPlaySeries={() => console.log("play series")}
+          onPlaySeries={playSeries}
         />
         <LessonsTableComponent
-          data={data}
+          data={filteredItems}
           resetPaginationToggle={resetPaginationToggle}
           loading={loading}
           setFilterText={setFilterText}

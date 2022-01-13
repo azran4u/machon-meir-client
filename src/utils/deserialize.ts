@@ -1,3 +1,3 @@
-export function deserialize(serializedJavascript: string) {
+export function deserialize<T>(serializedJavascript: string): T {
   return eval("(" + serializedJavascript + ")");
 }
