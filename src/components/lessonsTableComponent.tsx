@@ -14,9 +14,9 @@ import { dateSorter } from "../utils/dateSorter";
 import serialize from "serialize-javascript";
 
 interface Props {
-  data: any;
-  resetPaginationToggle: any;
-  loading: any;
+  data: Lesson[];
+  resetPaginationToggle: boolean;
+  loading: boolean;
 }
 export const LessonsTableComponent: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch();
@@ -84,7 +84,6 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
           pointerOnHover
           persistTableHead
           fixedHeader
-          keyField="id"
         />
       )}
     </div>
