@@ -1,4 +1,5 @@
 import {
+  createSelector,
   createSlice,
   PayloadAction,
   SliceCaseReducers,
@@ -7,17 +8,16 @@ import _ from "lodash";
 import { RootState } from "../store/store";
 import { Lesson } from "../model/lesson";
 import { deserialize } from "../utils/deserialize";
+import { selectLessons } from "./lessonsSlice";
 
 export interface CurrentPlayingState {
-  currentPlaying: string;
-  currentSeries?: string;
-  currentSeriesLesson?: string;
+  lessonSerialized: string;
+  searchTerm: string;
 }
 
 const currentPlayingInitialState: CurrentPlayingState = {
-  currentPlaying: undefined,
-  currentSeries: undefined,
-  currentSeriesLesson: undefined,
+  lessonSerialized: undefined,
+  searchTerm: "",
 };
 
 export const currentPlayingSlice = createSlice<
@@ -28,30 +28,78 @@ export const currentPlayingSlice = createSlice<
   initialState: currentPlayingInitialState,
   reducers: {
     setCurrentLesson: (state, action: PayloadAction<string>) => {
-      state.currentPlaying = action.payload;
+      state.lessonSerialized = action.payload;
     },
-    setCurrentSeries: (state, action: PayloadAction<string>) => {
-      state.currentSeries = action.payload;
-    },
-    setCurrentSeriesLesson: (state, action: PayloadAction<string>) => {
-      state.currentSeriesLesson = action.payload;
+    setSearchTerm: (state, action: PayloadAction<string>) => {
+      state.searchTerm = action.payload;
     },
   },
 });
 
-export const { setCurrentLesson, setCurrentSeries, setCurrentSeriesLesson } =
-  currentPlayingSlice.actions;
+export const { setCurrentLesson, setSearchTerm } = currentPlayingSlice.actions;
 
-export const selectCurrentLesson = (state: RootState): Lesson => {
-  return deserialize(state.currentPlaying.currentPlaying);
-};
+export const selectCurrentPlayingInitialState = (state: RootState) =>
+  state.currentPlaying;
 
-export const selectCurrentSeries = (state: RootState): string => {
-  return state.currentPlaying?.currentSeries ?? "";
-};
+export const selectCurrentLesson = createSelector(
+  selectCurrentPlayingInitialState,
+  (state) => deserialize<Lesson>(state.lessonSerialized)
+);
 
-export const selectCurrentSeriesLesson = (state: RootState): Lesson => {
-  return deserialize(state.currentPlaying?.currentSeriesLesson);
-};
+export const selectSearchTerm = createSelector(
+  selectCurrentPlayingInitialState,
+  (state) => state.searchTerm
+);
+
+export const selectLessonsWithSearchTerm = createSelector(
+  selectSearchTerm,
+  selectLessons,
+  (searchTerm, lessons) =>
+    lessons.filter(
+      (item) =>
+        (item.title &&
+          item.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.tags &&
+          item.tags.join(" ").toLowerCase().includes(searchTerm.toLowerCase()))
+    )
+);
+
+export const selectSeriesNextLesson = createSelector(
+  selectCurrentLesson,
+  selectLessonsWithSearchTerm,
+  (lesson, lessons) => {
+    const res = lessons.reduce<{
+      diff: number;
+      lesson: Lesson;
+    }>(
+      (acc, curr) => {
+        const diff = curr.date.getTime() - lesson.date.getTime();
+        if (diff > 0 && diff < acc.diff) return { diff, lesson: curr };
+        else return acc;
+      },
+      { diff: Infinity, lesson: null }
+    );
+    return res.lesson ?? lesson;
+  }
+);
+
+export const selectSeriesPrevLesson = createSelector(
+  selectCurrentLesson,
+  selectLessonsWithSearchTerm,
+  (lesson, lessons) => {
+    const res = lessons.reduce<{
+      diff: number;
+      lesson: Lesson;
+    }>(
+      (acc, curr) => {
+        const diff = curr.date.getTime() - lesson.date.getTime();
+        if (diff < 0 && diff > acc.diff) return { diff, lesson: curr };
+        else return acc;
+      },
+      { diff: -Infinity, lesson: null }
+    );
+    return res.lesson ?? lesson;
+  }
+);
 
 export default currentPlayingSlice.reducer;

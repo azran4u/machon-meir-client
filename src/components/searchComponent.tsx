@@ -35,26 +35,10 @@ const ClearButton = styled(ButtonComponent)`
   text-align: center;
 `;
 
-const Space = styled.div`
-  height: 32px;
-  width: 32px;
-`;
-
-const PlaySeriesButton = styled.button`
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  height: 32px;
-  color: white;
-  background-color: #212529;
-`;
-
 interface Props {
   filterText: any;
   onFilter: any;
   onClear: any;
-  onPlaySeries: any;
 }
 export const SearchComponent: React.FC<Props> = (props) => {
   return (
@@ -70,27 +54,6 @@ export const SearchComponent: React.FC<Props> = (props) => {
         value={props.filterText}
         onChange={props.onFilter}
       />
-      <Space />
-      <PlaySeriesButton type="button" onClick={props.onPlaySeries}>
-        נגן סדרה
-      </PlaySeriesButton>
     </Container>
   );
 };
-
-// eslint-disable-next-line react/prop-types
-// export const SearchComponent = ({ filterText, onFilter, onClear }: any) => (
-//   <>
-//     <TextField
-//       id="search"
-//       type="text"
-//       placeholder="הקלד מילות חיפוש"
-//       aria-label="Search Input"
-//       value={filterText}
-//       onChange={onFilter}
-//     />
-//     <ClearButton type="button" onClick={onClear}>
-//       X
-//     </ClearButton>
-//   </>
-// );

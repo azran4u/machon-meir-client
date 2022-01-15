@@ -4,7 +4,6 @@ import { TopNavBar } from "./components/navbar";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { LessonComponent } from "./components/lessonsComponent";
 import { MediaPlayerComponent } from "./components/mediaPlayer";
 import { useAppDispatch } from "./store/hooks";
 import { fetchLessonsAsync } from "./lessons/lessonsSlice";
@@ -24,7 +23,7 @@ function App() {
         <div className="App">
           <TopNavBar />
           <Switch>
-            <Route path="/media" component={MediaPlayerComponent} exact />
+            <Route path="/media/:lesson_id" component={MediaPlayerComponent} />
             <Route
               path="/rabbifireman"
               component={LessonComponentWraper}

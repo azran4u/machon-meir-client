@@ -3,7 +3,10 @@ import DataTable, {
   TableColumn,
 } from "react-data-table-component";
 import { Link } from "react-router-dom";
-import { setCurrentLesson } from "../lessons/currentPlayingSlice";
+import {
+  setCurrentLesson,
+  setSearchTerm,
+} from "../lessons/currentPlayingSlice";
 import { Lesson } from "../model/lesson";
 import { useAppDispatch } from "../store/hooks";
 import { dateFormat } from "../utils/dateFormat";
@@ -14,7 +17,6 @@ interface Props {
   data: any;
   resetPaginationToggle: any;
   loading: any;
-  setFilterText: any;
 }
 export const LessonsTableComponent: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch();
@@ -30,7 +32,9 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
       cell: (row) => (
         <div style={{ textAlign: "right", direction: "rtl" }}>
           {row.tags.map((tag) => {
-            return <div onClick={() => props.setFilterText(tag)}>{tag}</div>;
+            return (
+              <div onClick={() => dispatch(setSearchTerm(tag))}>{tag}</div>
+            );
           })}
         </div>
       ),
@@ -47,7 +51,7 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
           <div style={{ textAlign: "right", direction: "rtl" }}>
             <Link<{ lesson: Lesson }>
               to={{
-                pathname: "media",
+                pathname: `media/${row.id}`,
               }}
               onClick={() => dispatch(setCurrentLesson(serialize(row)))}
             >

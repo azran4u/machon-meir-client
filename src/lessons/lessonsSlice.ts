@@ -1,5 +1,6 @@
 import {
   createAsyncThunk,
+  createSelector,
   createSlice,
   SliceCaseReducers,
 } from "@reduxjs/toolkit";
@@ -84,25 +85,30 @@ export const lessonsSlice = createSlice<
   },
 });
 
-// export const {} = usersSlice.actions;
+export const selectLessonsState = (state: RootState) => state.lessons;
 
-export const selectLessons = (state: RootState): LessonsState<Snapshot> => {
-  return {
-    error: state.lessons.error,
-    loading: state.lessons.loading,
-    snapshot: {
-      rabbi: RabbiEnum[state.lessons.snapshot.rabbi],
-      date: new Date(+state.lessons.snapshot.date),
-      lessons: deserialize<Lesson[]>(state.lessons.snapshot.lessons).map(
-        (lesson) => {
+export const selectLessonsSnapshot = createSelector(
+  selectLessonsState,
+  (state) => {
+    return {
+      ...state,
+      snapshot: {
+        rabbi: RabbiEnum[state.snapshot.rabbi],
+        date: new Date(+state.snapshot.date),
+        lessons: deserialize<Lesson[]>(state.snapshot.lessons).map((lesson) => {
           if (!lesson.date) {
             lesson.date = new Date();
           }
           return lesson;
-        }
-      ),
-    },
-  };
-};
+        }),
+      },
+    };
+  }
+);
+
+export const selectLessons = createSelector(
+  selectLessonsSnapshot,
+  (snapshot) => snapshot.snapshot.lessons
+);
 
 export default lessonsSlice.reducer;
