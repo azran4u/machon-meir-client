@@ -11,12 +11,12 @@ import { deserialize } from "../utils/deserialize";
 import { selectLessons } from "./lessonsSlice";
 
 export interface CurrentPlayingState {
-  lessonSerialized: string;
+  lessonId: string;
   searchTerm: string;
 }
 
 const currentPlayingInitialState: CurrentPlayingState = {
-  lessonSerialized: undefined,
+  lessonId: undefined,
   searchTerm: "",
 };
 
@@ -27,8 +27,8 @@ export const currentPlayingSlice = createSlice<
   name: "lessons",
   initialState: currentPlayingInitialState,
   reducers: {
-    setCurrentLesson: (state, action: PayloadAction<string>) => {
-      state.lessonSerialized = action.payload;
+    setLessonId: (state, action: PayloadAction<string>) => {
+      state.lessonId = action.payload;
     },
     setSearchTerm: (state, action: PayloadAction<string>) => {
       state.searchTerm = action.payload;
@@ -36,19 +36,25 @@ export const currentPlayingSlice = createSlice<
   },
 });
 
-export const { setCurrentLesson, setSearchTerm } = currentPlayingSlice.actions;
+export const { setLessonId, setSearchTerm } = currentPlayingSlice.actions;
 
 export const selectCurrentPlayingInitialState = (state: RootState) =>
   state.currentPlaying;
 
-export const selectCurrentLesson = createSelector(
-  selectCurrentPlayingInitialState,
-  (state) => deserialize<Lesson>(state.lessonSerialized)
-);
-
 export const selectSearchTerm = createSelector(
   selectCurrentPlayingInitialState,
   (state) => state.searchTerm
+);
+
+export const selectLessonId = createSelector(
+  selectCurrentPlayingInitialState,
+  (state) => state.lessonId
+);
+
+export const selectCurrentLesson = createSelector(
+  selectLessonId,
+  selectLessons,
+  (id, lessons) => lessons.find((x) => x.id === id)
 );
 
 export const selectLessonsWithSearchTerm = createSelector(

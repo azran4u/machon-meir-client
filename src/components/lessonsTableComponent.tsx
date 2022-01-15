@@ -3,15 +3,11 @@ import DataTable, {
   TableColumn,
 } from "react-data-table-component";
 import { Link } from "react-router-dom";
-import {
-  setCurrentLesson,
-  setSearchTerm,
-} from "../lessons/currentPlayingSlice";
+import { setSearchTerm } from "../lessons/currentPlayingSlice";
 import { Lesson } from "../model/lesson";
 import { useAppDispatch } from "../store/hooks";
 import { dateFormat } from "../utils/dateFormat";
 import { dateSorter } from "../utils/dateSorter";
-import serialize from "serialize-javascript";
 
 interface Props {
   data: Lesson[];
@@ -53,7 +49,6 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
               to={{
                 pathname: `media/${row.id}`,
               }}
-              onClick={() => dispatch(setCurrentLesson(serialize(row)))}
             >
               {row.title}
             </Link>

@@ -3,13 +3,12 @@ import {
   selectCurrentLesson,
   selectSeriesNextLesson,
   selectSeriesPrevLesson,
-  setCurrentLesson,
+  setLessonId,
 } from "../lessons/currentPlayingSlice";
 // import { selectLessonById } from "../lessons/lessonsSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { dateFormat } from "../utils/dateFormat";
 import { BlackButtonComponent } from "./blackButtonComponent";
-import serialize from "serialize-javascript";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
@@ -31,10 +30,15 @@ const Audio = styled.audio`
   margin-top: 20px;
 `;
 
+interface Props {
+  match: { params: { lesson_id: string } };
+}
+
 // eslint-disable-next-line react/prop-types
-export const MediaPlayerComponent: React.FC = () => {
+export const MediaPlayerComponent: React.FC<Props> = (props) => {
   const history = useHistory();
   const dispatch = useAppDispatch();
+  dispatch(setLessonId(props.match.params.lesson_id));
   const lesson = useAppSelector(selectCurrentLesson);
   const next = useAppSelector(selectSeriesNextLesson);
   const prev = useAppSelector(selectSeriesPrevLesson);
@@ -43,7 +47,7 @@ export const MediaPlayerComponent: React.FC = () => {
 
   const PLAYBACK = 30;
   useEffect(() => {
-    const currentTimeInLocalStorage = +localStorage.getItem(lesson.mediaUrl);
+    const currentTimeInLocalStorage = +localStorage.getItem(lesson?.mediaUrl);
     if (currentTimeInLocalStorage) {
       audio.current.currentTime =
         currentTimeInLocalStorage > PLAYBACK
@@ -53,7 +57,10 @@ export const MediaPlayerComponent: React.FC = () => {
   }, [lesson]);
 
   const onPause = () => {
-    localStorage.setItem(lesson.mediaUrl, audio.current.currentTime.toString());
+    localStorage.setItem(
+      lesson?.mediaUrl,
+      audio.current.currentTime.toString()
+    );
   };
 
   return (
@@ -74,7 +81,6 @@ export const MediaPlayerComponent: React.FC = () => {
             <BlackButtonComponent
               type="button"
               onClick={() => {
-                dispatch(setCurrentLesson(serialize(prev)));
                 history.push(`/media/${prev.id}`);
               }}
             >
@@ -83,7 +89,6 @@ export const MediaPlayerComponent: React.FC = () => {
             <BlackButtonComponent
               type="button"
               onClick={() => {
-                dispatch(setCurrentLesson(serialize(next)));
                 history.push(`/media/${next.id}`);
               }}
             >
