@@ -84,7 +84,7 @@ export const MediaPlayerComponent: React.FC<Props> = (props) => {
                 history.push(`/media/${prev.id}`);
               }}
             >
-              שיעור הקודם
+              שיעור קודם
             </BlackButtonComponent>
             <BlackButtonComponent
               type="button"
