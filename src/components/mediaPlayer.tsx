@@ -126,10 +126,10 @@ export const MediaPlayerComponent: React.FC<Props> = (props) => {
                 defaultValue={DEFAULT_PLAYBACK_SPEED}
                 getAriaValueText={valuetext}
                 valueLabelDisplay="auto"
-                step={0.5}
-                marks={marks}
-                min={0.5}
-                max={2}
+                step={0.1}
+                // marks={marks}
+                min={0.0}
+                max={3}
                 onChange={(event: Event, value: number) =>
                   setPlaybackSpeed(value)
                 }
