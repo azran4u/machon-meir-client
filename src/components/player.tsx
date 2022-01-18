@@ -5,15 +5,14 @@ import {
   selectSeriesPrevLesson,
   setLessonId,
 } from "../lessons/currentPlayingSlice";
-// import { selectLessonById } from "../lessons/lessonsSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { dateFormat } from "../utils/dateFormat";
-import { BlackButtonComponent } from "./blackButtonComponent";
 import { useHistory } from "react-router-dom";
-import styled from "styled-components";
 import FastForwardIcon from "@mui/icons-material/FastForward";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/system";
 
 const marks = [
   {
@@ -38,37 +37,42 @@ function valuetext(value: number) {
   return marks.find((x) => x.value === value)?.label ?? "";
 }
 
-const H5 = styled.h5`
-  margin-top: 20px;
-  text-align: center;
-  direction: rtl;
-`;
+const H5 = styled("h5")({
+  marginTop: "20px",
+  textAlign: "center",
+  direction: "rtl",
+});
 
-const FlexContainerColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10%;
-`;
+const FlexContainerColumn = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: "10%",
+});
 
-const FlexContainerRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-`;
-const Audio = styled.audio`
-  margin-top: 20px;
-`;
+const FlexContainerRow = styled("div")({
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: "10px",
+});
+
+const Audio = styled("audio")({
+  marginTop: "20px",
+});
+
+const StyledButton = styled(Button)({
+  margin: "20px",
+});
 
 interface Props {
   match: { params: { lesson_id: string } };
 }
 
 // eslint-disable-next-line react/prop-types
-export const MediaPlayerComponent: React.FC<Props> = (props) => {
+export const PlayerComponent: React.FC<Props> = (props) => {
   const history = useHistory();
   const dispatch = useAppDispatch();
   dispatch(setLessonId(props.match.params.lesson_id));
@@ -108,7 +112,6 @@ export const MediaPlayerComponent: React.FC<Props> = (props) => {
   return (
     <div>
       {lesson && (
-        // <MuiThemeProvider theme={theme}>
         <FlexContainerColumn>
           <Audio
             ref={audio}
@@ -127,7 +130,6 @@ export const MediaPlayerComponent: React.FC<Props> = (props) => {
                 getAriaValueText={valuetext}
                 valueLabelDisplay="auto"
                 step={0.1}
-                // marks={marks}
                 min={0.0}
                 max={3}
                 onChange={(event: Event, value: number) =>
@@ -141,25 +143,26 @@ export const MediaPlayerComponent: React.FC<Props> = (props) => {
           <H5>תגיות: {lesson.tags.join(" , ")}</H5>
           <H5>{dateFormat(lesson.date)}</H5>
           <div>
-            <BlackButtonComponent
-              type="button"
+            <StyledButton
+              variant="contained"
+              size="small"
               onClick={() => {
                 history.push(`/media/${prev.id}`);
               }}
             >
               שיעור קודם
-            </BlackButtonComponent>
-            <BlackButtonComponent
-              type="button"
+            </StyledButton>
+            <StyledButton
+              variant="contained"
+              size="small"
               onClick={() => {
                 history.push(`/media/${next.id}`);
               }}
             >
               שיעור הבא
-            </BlackButtonComponent>
+            </StyledButton>
           </div>
         </FlexContainerColumn>
-        // </MuiThemeProvider>
       )}
     </div>
   );

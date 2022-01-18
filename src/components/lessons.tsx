@@ -8,6 +8,8 @@ import { Lesson } from "../model/lesson";
 import { useAppDispatch } from "../store/hooks";
 import { dateFormat } from "../utils/dateFormat";
 import { dateSorter } from "../utils/dateSorter";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 
 interface Props {
   data: Lesson[];
@@ -29,7 +31,16 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
         <div style={{ textAlign: "right", direction: "rtl" }}>
           {row.tags.map((tag) => {
             return (
-              <div onClick={() => dispatch(setSearchTerm(tag))}>{tag}</div>
+              <div>
+                <Stack direction="row" spacing={1}>
+                  <Chip
+                    sx={{ margin: "2px" }}
+                    variant="outlined"
+                    label={tag}
+                    onClick={() => dispatch(setSearchTerm(tag))}
+                  />
+                </Stack>
+              </div>
             );
           })}
         </div>
