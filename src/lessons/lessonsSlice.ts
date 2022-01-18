@@ -6,7 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import _ from "lodash";
 import { RabbiEnum } from "../model/rabi.enum";
-import { Snapshot, SnapshotSerializable } from "../model/snapshot";
+import { SnapshotSerializable } from "../model/snapshot";
 import { RootState } from "../store/store";
 import { fetchLessonsByRabbi } from "./lessonsService";
 import serialize from "serialize-javascript";

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   selectCurrentLesson,
   selectSeriesNextLesson,
@@ -11,6 +11,32 @@ import { dateFormat } from "../utils/dateFormat";
 import { BlackButtonComponent } from "./blackButtonComponent";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+import FastForwardIcon from "@mui/icons-material/FastForward";
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
+
+const marks = [
+  {
+    value: 0.5,
+    label: "0.5",
+  },
+  {
+    value: 1,
+    label: "1.0",
+  },
+  {
+    value: 1.5,
+    label: "1.5",
+  },
+  {
+    value: 2,
+    label: "2.0",
+  },
+];
+
+function valuetext(value: number) {
+  return marks.find((x) => x.value === value)?.label ?? "";
+}
 
 const H5 = styled.h5`
   margin-top: 20px;
@@ -18,7 +44,7 @@ const H5 = styled.h5`
   direction: rtl;
 `;
 
-const FlexContainer = styled.div`
+const FlexContainerColumn = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -26,6 +52,13 @@ const FlexContainer = styled.div`
   margin-top: 10%;
 `;
 
+const FlexContainerRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+`;
 const Audio = styled.audio`
   margin-top: 20px;
 `;
@@ -43,6 +76,9 @@ export const MediaPlayerComponent: React.FC<Props> = (props) => {
   const next = useAppSelector(selectSeriesNextLesson);
   const prev = useAppSelector(selectSeriesPrevLesson);
 
+  const DEFAULT_PLAYBACK_SPEED = 1.0;
+  const [playbackSpeed, setPlaybackSpeed] = useState(DEFAULT_PLAYBACK_SPEED);
+
   const audio = useRef<HTMLAudioElement>(null);
 
   const PLAYBACK = 30;
@@ -56,6 +92,12 @@ export const MediaPlayerComponent: React.FC<Props> = (props) => {
     }
   }, [lesson]);
 
+  useEffect(() => {
+    if (audio?.current) {
+      audio.current.playbackRate = playbackSpeed;
+    }
+  }, [playbackSpeed]);
+
   const onPause = () => {
     localStorage.setItem(
       lesson?.mediaUrl,
@@ -66,7 +108,8 @@ export const MediaPlayerComponent: React.FC<Props> = (props) => {
   return (
     <div>
       {lesson && (
-        <FlexContainer>
+        // <MuiThemeProvider theme={theme}>
+        <FlexContainerColumn>
           <Audio
             ref={audio}
             src={lesson.mediaUrl}
@@ -74,6 +117,26 @@ export const MediaPlayerComponent: React.FC<Props> = (props) => {
             autoPlay
             onPause={onPause}
           ></Audio>
+          <FlexContainerRow>
+            <FastForwardIcon></FastForwardIcon>
+            <Box sx={{ width: 300, marginLeft: "20px" }}>
+              <Slider
+                color="primary"
+                aria-label="Playback Speed"
+                defaultValue={DEFAULT_PLAYBACK_SPEED}
+                getAriaValueText={valuetext}
+                valueLabelDisplay="auto"
+                step={0.5}
+                marks={marks}
+                min={0.5}
+                max={2}
+                onChange={(event: Event, value: number) =>
+                  setPlaybackSpeed(value)
+                }
+              />
+            </Box>
+          </FlexContainerRow>
+
           <H5>{lesson.title}</H5>
           <H5>תגיות: {lesson.tags.join(" , ")}</H5>
           <H5>{dateFormat(lesson.date)}</H5>
@@ -95,7 +158,8 @@ export const MediaPlayerComponent: React.FC<Props> = (props) => {
               שיעור הבא
             </BlackButtonComponent>
           </div>
-        </FlexContainer>
+        </FlexContainerColumn>
+        // </MuiThemeProvider>
       )}
     </div>
   );

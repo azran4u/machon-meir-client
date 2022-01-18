@@ -4,10 +4,8 @@ import {
   PayloadAction,
   SliceCaseReducers,
 } from "@reduxjs/toolkit";
-import _ from "lodash";
 import { RootState } from "../store/store";
 import { Lesson } from "../model/lesson";
-import { deserialize } from "../utils/deserialize";
 import { selectLessons } from "./lessonsSlice";
 
 export interface CurrentPlayingState {
