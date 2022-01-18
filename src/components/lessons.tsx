@@ -27,6 +27,7 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
       name: "תגיות",
       wrap: true,
       right: true,
+      minWidth: "250px",
       cell: (row) => (
         <div style={{ textAlign: "right", direction: "rtl" }}>
           {row.tags.map((tag) => {
@@ -45,7 +46,7 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
           })}
         </div>
       ),
-      allowOverflow: true,
+      allowOverflow: false,
     },
     {
       name: "כותרת",
@@ -53,6 +54,7 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
       sortable: true,
       wrap: true,
       right: true,
+      minWidth: "50px",
       cell: (row) => {
         return (
           <div style={{ textAlign: "right", direction: "rtl" }}>
