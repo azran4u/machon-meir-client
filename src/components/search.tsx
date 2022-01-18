@@ -21,7 +21,7 @@ export const SearchComponent: React.FC<Props> = (props) => {
         p: "2px 4px",
         display: "flex",
         alignItems: "center",
-        width: 400,
+        width: "70%",
         borderStyle: "solid",
       }}
     >
