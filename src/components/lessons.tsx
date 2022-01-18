@@ -25,9 +25,8 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
   const columns: TableColumn<Lesson>[] = [
     {
       name: "תגיות",
-      wrap: true,
+      // wrap: true,
       right: true,
-      minWidth: "250px",
       cell: (row) => (
         <div style={{ textAlign: "right", direction: "rtl" }}>
           {row.tags.map((tag) => {
@@ -35,8 +34,9 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
               <div>
                 <Stack direction="row" spacing={1}>
                   <Chip
-                    sx={{ margin: "2px" }}
+                    sx={{ margin: "2px", fontSize: "5px" }}
                     variant="outlined"
+                    size="small"
                     label={tag}
                     onClick={() => dispatch(setSearchTerm(tag))}
                   />
@@ -46,7 +46,7 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
           })}
         </div>
       ),
-      allowOverflow: false,
+      allowOverflow: true,
     },
     {
       name: "כותרת",
@@ -54,7 +54,7 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
       sortable: true,
       wrap: true,
       right: true,
-      minWidth: "50px",
+      grow: 2,
       cell: (row) => {
         return (
           <div style={{ textAlign: "right", direction: "rtl" }}>
@@ -75,7 +75,8 @@ export const LessonsTableComponent: React.FC<Props> = (props) => {
       sortable: true,
       sortFunction: dateSorter,
       right: true,
-      maxWidth: "120px",
+      allowOverflow: false,
+      compact: true,
     },
   ];
   return (
